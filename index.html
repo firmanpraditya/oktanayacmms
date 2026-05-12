@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CMMS Smart Factory — Blueprint Interaktif</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue-50: #E6F1FB; --blue-100: #B5D4F4; --blue-200: #85B7EB;
+  --blue-400: #378ADD; --blue-600: #185FA5; --blue-800: #0C447C; --blue-900: #042C53;
+  --teal-50: #E1F5EE; --teal-100: #9FE1CB; --teal-400: #1D9E75; --teal-600: #0F6E56; --teal-800: #085041;
+  --amber-50: #FAEEDA; --amber-100: #FAC775; --amber-400: #BA7517; --amber-600: #854F0B; --amber-800: #633806;
+  --purple-50: #EEEDFE; --purple-100: #CECBF6; --purple-400: #7F77DD; --purple-600: #534AB7; --purple-800: #3C3489;
+  --coral-50: #FAECE7; --coral-100: #F5C4B3; --coral-400: #D85A30; --coral-600: #993C1D; --coral-800: #712B13;
+  --green-50: #EAF3DE; --green-400: #639922; --green-600: #3B6D11; --green-800: #27500A;
+  --gray-50: #F1EFE8; --gray-100: #D3D1C7; --gray-400: #888780; --gray-600: #5F5E5A; --gray-800: #444441;
+  --bg: #F7F6F2;
+  --surface: #FFFFFF;
+  --text-primary: #1A1A18;
+  --text-secondary: #5F5E5A;
+  --text-muted: #888780;
+  --border: rgba(0,0,0,0.1);
+  --border-strong: rgba(0,0,0,0.18);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.10), 0 4px 8px rgba(0,0,0,0.05);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ========= NAV ========= */
+.nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: var(--shadow-sm);
+}
+.nav-inner {
+  max-width: 1100px; margin: 0 auto;
+  display: flex; align-items: center; gap: 0;
+  padding: 0 24px; height: 60px;
+}
+.nav-brand {
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 700; font-size: 15px; color: var(--text-primary);
+  margin-right: 32px; text-decoration: none; flex-shrink: 0;
+}
+.nav-brand-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--blue-600); display: flex; align-items: center; justify-content: center;
+}
+.nav-brand-icon svg { width: 18px; height: 18px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.nav-tabs { display: flex; gap: 2px; overflow-x: auto; flex: 1; }
+.nav-tab {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  color: var(--text-secondary); border: none; background: none;
+  white-space: nowrap; transition: all 0.15s; text-decoration: none;
+}
+.nav-tab:hover { background: var(--gray-50); color: var(--text-primary); }
+.nav-tab.active { background: var(--blue-50); color: var(--blue-800); }
+.nav-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--gray-100); flex-shrink: 0;
+}
+.nav-tab.active .nav-dot { background: var(--blue-400); }
+.nav-tab[data-phase="1"].active .nav-dot { background: var(--blue-400); }
+.nav-tab[data-phase="2"].active .nav-dot { background: var(--teal-400); }
+.nav-tab[data-phase="3"].active .nav-dot { background: var(--amber-400); }
+.nav-tab[data-phase="4"].active .nav-dot { background: var(--purple-400); }
+
+/* ========= HERO ========= */
+.hero {
+  background: linear-gradient(135deg, #042C53 0%, #185FA5 50%, #1D9E75 100%);
+  color: white; padding: 56px 24px 48px;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.hero-inner { max-width: 1100px; margin: 0 auto; position: relative; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 100px; padding: 4px 12px; font-size: 12px; font-weight: 600;
+  letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 20px;
+  color: rgba(255,255,255,0.9);
+}
+.hero-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #9FE1CB; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.7;transform:scale(1.2)} }
+.hero h1 { font-size: clamp(28px, 5vw, 44px); font-weight: 800; line-height: 1.15; margin-bottom: 16px; }
+.hero h1 span { color: #9FE1CB; }
+.hero p { font-size: 16px; color: rgba(255,255,255,0.75); max-width: 620px; margin-bottom: 32px; }
+.hero-stats {
+  display: flex; gap: 32px; flex-wrap: wrap;
+}
+.hero-stat { }
+.hero-stat-num { font-size: 26px; font-weight: 800; color: white; }
+.hero-stat-label { font-size: 12px; color: rgba(255,255,255,0.6); }
+
+/* ========= MAIN ========= */
+.main { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
+.section { display: none; }
+.section.active { display: block; animation: fadeIn 0.25s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+/* ========= SECTION HEADER ========= */
+.section-header { margin-bottom: 32px; }
+.section-eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--blue-600); margin-bottom: 10px;
+}
+.section-header h2 { font-size: 26px; font-weight: 800; margin-bottom: 8px; }
+.section-header p { font-size: 15px; color: var(--text-secondary); max-width: 680px; }
+
+/* ========= PHASE HEADER ========= */
+.phase-header {
+  border-radius: var(--radius-xl); padding: 28px 32px; margin-bottom: 28px;
+  display: flex; align-items: flex-start; gap: 20px;
+  position: relative; overflow: hidden;
+}
+.phase-header::after {
+  content: attr(data-num);
+  position: absolute; right: 24px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 96px; font-weight: 800;
+  opacity: 0.07; line-height: 1;
+  color: white; pointer-events: none; user-select: none;
+}
+.ph-1 { background: linear-gradient(135deg, var(--blue-800), var(--blue-600)); }
+.ph-2 { background: linear-gradient(135deg, var(--teal-800), var(--teal-400)); }
+.ph-3 { background: linear-gradient(135deg, var(--amber-800), var(--amber-400)); }
+.ph-4 { background: linear-gradient(135deg, var(--purple-800), var(--purple-600)); }
+.phase-icon {
+  width: 52px; height: 52px; border-radius: var(--radius-md);
+  background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.phase-icon svg { width: 26px; height: 26px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.phase-header-text h2 { color: white; font-size: 22px; font-weight: 800; }
+.phase-header-text p { color: rgba(255,255,255,0.75); font-size: 14px; margin-top: 4px; }
+.phase-badge {
+  display: inline-block; background: rgba(255,255,255,0.2);
+  border-radius: 100px; padding: 3px 12px; font-size: 12px;
+  font-weight: 600; color: rgba(255,255,255,0.9); margin-top: 8px;
+}
+
+/* ========= GRID ========= */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+@media(max-width: 768px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+}
+
+/* ========= CARD ========= */
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+.card-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.card-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+/* ========= FEATURE LIST ========= */
+.feature-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+.feature-list li {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 13px; color: var(--text-secondary); line-height: 1.5;
+}
+.feature-check {
+  width: 18px; height: 18px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.check-blue { background: var(--blue-50); }
+.check-teal { background: var(--teal-50); }
+.check-amber { background: var(--amber-50); }
+.check-purple { background: var(--purple-50); }
+.feature-check svg { width: 10px; height: 10px; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ========= TECH STACK ========= */
+.tech-stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.tech-pill {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--gray-50); border: 1px solid var(--border);
+  border-radius: 100px; padding: 4px 12px;
+  font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text-secondary);
+}
+.tech-pill-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+}
+
+/* ========= KPI CARD ========= */
+.kpi-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 18px 20px;
+  text-align: center; box-shadow: var(--shadow-sm);
+}
+.kpi-num {
+  font-size: 28px; font-weight: 800;
+  line-height: 1.1; margin-bottom: 4px;
+}
+.kpi-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+
+/* ========= WORKFLOW ========= */
+.workflow-container {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); padding: 24px;
+  box-shadow: var(--shadow-sm); overflow-x: auto;
+}
+.workflow-title {
+  font-size: 13px; font-weight: 700; color: var(--text-muted);
+  letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 20px;
+}
+.workflow-steps {
+  display: flex; align-items: stretch; gap: 0;
+  min-width: 600px;
+}
+.workflow-step {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  position: relative;
+}
+.workflow-step:not(:last-child)::after {
+  content: '';
+  position: absolute; right: -1px; top: 26px;
+  width: 2px; height: 24px;
+  background: var(--border-strong);
+  display: none;
+}
+.step-connector {
+  display: flex; align-items: center; padding: 0;
+  flex-shrink: 0;
+}
+.step-connector-line {
+  height: 2px; width: 20px; background: var(--border-strong);
+}
+.step-connector svg {
+  width: 12px; height: 12px; flex-shrink: 0;
+  stroke: var(--text-muted); fill: none; stroke-width: 2;
+}
+.step-node {
+  width: 52px; height: 52px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 16px; flex-shrink: 0;
+  border: 2px solid transparent;
+  transition: transform 0.2s;
+  cursor: default;
+}
+.step-node:hover { transform: scale(1.08); }
+.step-label {
+  font-size: 11px; font-weight: 600; text-align: center;
+  color: var(--text-secondary); margin-top: 8px; line-height: 1.3;
+  max-width: 72px;
+}
+.step-sub {
+  font-size: 10px; color: var(--text-muted); text-align: center;
+  line-height: 1.3; max-width: 72px; margin-top: 2px;
+}
+.workflow-row {
+  display: flex; align-items: center; justify-content: center;
+  flex-wrap: nowrap;
+}
+.workflow-feedback {
+  margin-top: 12px; padding: 10px 14px;
+  background: rgba(186, 117, 23, 0.08);
+  border: 1px dashed var(--amber-100);
+  border-radius: var(--radius-md);
+  font-size: 12px; color: var(--amber-600);
+  display: flex; align-items: center; gap: 6px;
+}
+
+/* ========= ARCHITECTURE DIAGRAM ========= */
+.arch-container {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); padding: 24px 20px;
+  box-shadow: var(--shadow-sm); overflow-x: auto;
+}
+.arch-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.arch-row:last-child { margin-bottom: 0; }
+.arch-layer-label {
+  font-size: 11px; font-weight: 700; text-align: right;
+  color: var(--text-muted); letter-spacing: 0.04em;
+  text-transform: uppercase; line-height: 1.3;
+  padding-right: 8px;
+}
+.arch-phases {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
+}
+.arch-cell {
+  border-radius: var(--radius-sm); padding: 8px 10px;
+  font-size: 11px; font-weight: 500; line-height: 1.35;
+  border: 1px solid transparent;
+}
+.arch-cell.ph1 { background: var(--blue-50); color: var(--blue-800); border-color: var(--blue-100); }
+.arch-cell.ph2 { background: var(--teal-50); color: var(--teal-600); border-color: var(--teal-100); }
+.arch-cell.ph3 { background: var(--amber-50); color: var(--amber-600); border-color: var(--amber-100); }
+.arch-cell.ph4 { background: var(--purple-50); color: var(--purple-800); border-color: var(--purple-100); }
+.arch-header {
+  display: grid; grid-template-columns: 110px 1fr; gap: 12px; margin-bottom: 6px;
+}
+.arch-header-phases {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
+}
+.arch-phase-label {
+  font-size: 11px; font-weight: 700; text-align: center;
+  padding: 4px 8px; border-radius: var(--radius-sm);
+  letter-spacing: 0.04em; text-transform: uppercase;
+}
+.apl-1 { background: var(--blue-600); color: white; }
+.apl-2 { background: var(--teal-600); color: white; }
+.apl-3 { background: var(--amber-600); color: white; }
+.apl-4 { background: var(--purple-600); color: white; }
+.arch-divider {
+  height: 1px; background: var(--border); margin: 10px 0;
+  grid-column: 1/-1;
+}
+
+/* ========= ROADMAP TIMELINE ========= */
+.timeline {
+  position: relative; padding-left: 32px;
+}
+.timeline::before {
+  content: ''; position: absolute; left: 11px; top: 8px; bottom: 8px;
+  width: 2px; background: linear-gradient(to bottom, var(--blue-400), var(--purple-400));
+  border-radius: 2px;
+}
+.timeline-item { position: relative; margin-bottom: 24px; }
+.timeline-item:last-child { margin-bottom: 0; }
+.timeline-dot {
+  position: absolute; left: -26px; top: 4px;
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid white; box-shadow: 0 0 0 2px currentColor;
+}
+.td-1 { background: var(--blue-400); color: var(--blue-400); }
+.td-2 { background: var(--teal-400); color: var(--teal-400); }
+.td-3 { background: var(--amber-400); color: var(--amber-400); }
+.td-4 { background: var(--purple-400); color: var(--purple-400); }
+.timeline-content {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 16px 18px;
+  box-shadow: var(--shadow-sm);
+}
+.timeline-period {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; margin-bottom: 4px;
+}
+.timeline-content h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.timeline-content p { font-size: 13px; color: var(--text-secondary); }
+.timeline-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.tag {
+  font-size: 11px; font-weight: 600; padding: 3px 9px;
+  border-radius: 100px; border: 1px solid transparent;
+}
+.tag-blue { background: var(--blue-50); color: var(--blue-800); border-color: var(--blue-100); }
+.tag-teal { background: var(--teal-50); color: var(--teal-600); border-color: var(--teal-100); }
+.tag-amber { background: var(--amber-50); color: var(--amber-600); border-color: var(--amber-100); }
+.tag-purple { background: var(--purple-50); color: var(--purple-800); border-color: var(--purple-100); }
+
+/* ========= APPROVAL FLOW ========= */
+.approval-flow {
+  display: flex; align-items: center; gap: 0; flex-wrap: nowrap;
+  overflow-x: auto; padding-bottom: 4px;
+}
+.appr-step {
+  display: flex; flex-direction: column; align-items: center;
+  min-width: 90px; flex: 1;
+}
+.appr-node {
+  width: 44px; height: 44px; border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700;
+}
+.appr-label { font-size: 10px; font-weight: 600; text-align: center; margin-top: 6px; line-height: 1.3; color: var(--text-secondary); }
+.appr-arrow {
+  display: flex; align-items: center; padding-top: 0;
+  color: var(--text-muted);
+}
+.appr-arrow svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+/* ========= STATUS BADGES ========= */
+.status-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.status-badge {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: 100px; font-size: 12px; font-weight: 600;
+}
+.sb-open { background: var(--blue-50); color: var(--blue-800); }
+.sb-progress { background: var(--amber-50); color: var(--amber-800); }
+.sb-overdue { background: #FEF2F2; color: #991B1B; }
+.sb-done { background: var(--green-50); color: var(--green-600); }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; }
+.sd-open { background: var(--blue-400); }
+.sd-progress { background: var(--amber-400); }
+.sd-overdue { background: #EF4444; }
+.sd-done { background: var(--green-400); }
+
+/* ========= AI CARD ========= */
+.ai-card {
+  background: linear-gradient(135deg, var(--purple-50), #F5F3FF);
+  border: 1px solid var(--purple-100);
+  border-radius: var(--radius-xl); padding: 24px;
+  position: relative; overflow: hidden;
+}
+.ai-card::before {
+  content: 'AI';
+  position: absolute; right: 20px; top: 16px;
+  font-size: 48px; font-weight: 800; color: var(--purple-100);
+  line-height: 1; pointer-events: none;
+}
+.ai-notification {
+  background: white; border: 1px solid var(--purple-100);
+  border-radius: var(--radius-lg); padding: 16px 18px;
+  font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+  position: relative;
+}
+.ai-notification::before {
+  content: '🔔'; font-size: 16px;
+  display: block; margin-bottom: 6px;
+}
+.ai-notification strong { color: var(--purple-800); }
+
+/* ========= RISK TABLE ========= */
+.risk-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.risk-table th {
+  text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted);
+  border-bottom: 2px solid var(--border); background: var(--gray-50);
+}
+.risk-table th:first-child { border-radius: var(--radius-sm) 0 0 0; }
+.risk-table th:last-child { border-radius: 0 var(--radius-sm) 0 0; }
+.risk-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--text-secondary); line-height: 1.5; }
+.risk-table tr:last-child td { border-bottom: none; }
+.risk-table tr:hover td { background: var(--gray-50); }
+.risk-level {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 8px; border-radius: 100px; font-size: 11px; font-weight: 600;
+}
+.rl-high { background: #FEF2F2; color: #991B1B; }
+.rl-med { background: var(--amber-50); color: var(--amber-800); }
+.rl-low { background: var(--green-50); color: var(--green-800); }
+
+/* ========= OVERVIEW PHASE CARDS ========= */
+.overview-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+@media(max-width: 640px) { .overview-grid { grid-template-columns: 1fr; } }
+.overview-card {
+  border-radius: var(--radius-xl); padding: 24px;
+  cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+  position: relative; overflow: hidden; text-decoration: none;
+  display: block;
+}
+.overview-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+.oc-1 { background: linear-gradient(135deg, var(--blue-50), #EBF4FD); border: 1px solid var(--blue-100); }
+.oc-2 { background: linear-gradient(135deg, var(--teal-50), #E5F7F1); border: 1px solid var(--teal-100); }
+.oc-3 { background: linear-gradient(135deg, var(--amber-50), #FDF3E1); border: 1px solid var(--amber-100); }
+.oc-4 { background: linear-gradient(135deg, var(--purple-50), #EEEDFE); border: 1px solid var(--purple-100); }
+.oc-num {
+  font-size: 40px; font-weight: 800; line-height: 1; margin-bottom: 12px;
+  opacity: 0.12; position: absolute; right: 20px; top: 16px;
+}
+.oc-badge {
+  display: inline-block; padding: 3px 10px; border-radius: 100px;
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
+  margin-bottom: 10px;
+}
+.ocb-1 { background: var(--blue-600); color: white; }
+.ocb-2 { background: var(--teal-600); color: white; }
+.ocb-3 { background: var(--amber-600); color: white; }
+.ocb-4 { background: var(--purple-600); color: white; }
+.overview-card h3 { font-size: 17px; font-weight: 800; margin-bottom: 6px; color: var(--text-primary); }
+.overview-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+.oc-cta {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 12px; font-weight: 700; margin-top: 14px;
+  text-decoration: none;
+}
+.oc-1 .oc-cta { color: var(--blue-600); }
+.oc-2 .oc-cta { color: var(--teal-600); }
+.oc-3 .oc-cta { color: var(--amber-600); }
+.oc-4 .oc-cta { color: var(--purple-600); }
+.oc-cta svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ========= PROBLEM BOX ========= */
+.problem-box {
+  background: #FFF9EB; border: 1px solid #FAC775;
+  border-radius: var(--radius-lg); padding: 18px 20px; margin-bottom: 24px;
+}
+.problem-box h4 { font-size: 13px; font-weight: 700; color: var(--amber-800); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.problem-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+.problem-list li { font-size: 13px; color: #633806; padding-left: 18px; position: relative; line-height: 1.45; }
+.problem-list li::before { content: '→'; position: absolute; left: 0; color: var(--amber-400); }
+
+/* ========= UTILS ========= */
+.mb-4 { margin-bottom: 4px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-24 { margin-bottom: 24px; }
+.mb-32 { margin-bottom: 32px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.text-blue { color: var(--blue-600); }
+.text-teal { color: var(--teal-600); }
+.text-amber { color: var(--amber-600); }
+.text-purple { color: var(--purple-600); }
+.text-sm { font-size: 13px; }
+.text-muted { color: var(--text-muted); }
+.font-mono { font-family: 'DM Mono', monospace; }
+hr.divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-brand" onclick="showSection('overview'); return false;">
+      <div class="nav-brand-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      CMMS Smart Factory
+    </a>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showSection('overview')" data-section="overview">
+        <span class="nav-dot"></span>Ringkasan
+      </button>
+      <button class="nav-tab" onclick="showSection('fase1')" data-section="fase1" data-phase="1">
+        <span class="nav-dot"></span>Fase 1 — MVP
+      </button>
+      <button class="nav-tab" onclick="showSection('fase2')" data-section="fase2" data-phase="2">
+        <span class="nav-dot"></span>Fase 2 — Automasi
+      </button>
+      <button class="nav-tab" onclick="showSection('fase3')" data-section="fase3" data-phase="3">
+        <span class="nav-dot"></span>Fase 3 — Supply Chain
+      </button>
+      <button class="nav-tab" onclick="showSection('fase4')" data-section="fase4" data-phase="4">
+        <span class="nav-dot"></span>Fase 4 — Enterprise AI
+      </button>
+      <button class="nav-tab" onclick="showSection('arsitektur')" data-section="arsitektur">
+        <span class="nav-dot"></span>Arsitektur
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">Dokumen Internal — Blueprint Proyek</div>
+    <h1>Transformasi Pemeliharaan Pabrik<br><span>ke Era Digital Smart Factory</span></h1>
+    <p>CMMS menggantikan laporan WhatsApp dan helpdesk konvensional dengan platform digital terstruktur — dari tiket QR Code hingga prediksi kerusakan berbasis AI.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">4 Fase</div>
+        <div class="hero-stat-label">Implementasi bertahap</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">3 Tahun</div>
+        <div class="hero-stat-label">Horizon waktu</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">≥80%</div>
+        <div class="hero-stat-label">Target akurasi AI prediktif</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">0</div>
+        <div class="hero-stat-label">Laporan via WhatsApp (Fase 1)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- =============================== OVERVIEW =============================== -->
+<section id="section-overview" class="section active">
+  <div class="section-header">
+    <div class="section-eyebrow">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Tentang Proyek
+    </div>
+    <h2>Apa itu CMMS Smart Factory?</h2>
+    <p>Computerized Maintenance Management System (CMMS) adalah platform digital terpadu untuk mengelola seluruh aktivitas pemeliharaan mesin — dari laporan kerusakan hingga prediksi kerusakan sebelum terjadi.</p>
+  </div>
+
+  <div class="problem-box mb-24">
+    <h4>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Masalah yang Diselesaikan
+    </h4>
+    <ul class="problem-list">
+      <li>Laporan kerusakan mesin hanya via WhatsApp — tidak ada jejak audit yang jelas</li>
+      <li>Status perbaikan tidak bisa dipantau real-time oleh SPV dan Manajer</li>
+      <li>Tidak ada histori kerusakan tersimpan untuk analisis pola dan tren</li>
+      <li>Alur approval Purchase Request (spare part) tidak terdokumentasi</li>
+      <li>Preventive Maintenance tidak terjadwal otomatis — bergantung pada ingatan manusia</li>
+    </ul>
+  </div>
+
+  <div class="overview-grid mb-32">
+    <a class="overview-card oc-1" href="#" onclick="showSection('fase1'); return false;">
+      <div class="oc-num">1</div>
+      <span class="oc-badge ocb-1">Bulan 1–2</span>
+      <h3>Fase 1 — MVP & Fondasi</h3>
+      <p>Digitalisasi laporan kerusakan via QR Code. Nol laporan WhatsApp. Dashboard tiket untuk SPV dan Manajer.</p>
+      <span class="oc-cta">Lihat detail <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+    </a>
+    <a class="overview-card oc-2" href="#" onclick="showSection('fase2'); return false;">
+      <div class="oc-num">2</div>
+      <span class="oc-badge ocb-2">Bulan 3–5</span>
+      <h3>Fase 2 — Automasi</h3>
+      <p>Laporan PDF mingguan otomatis ke Manajer. Scheduler Preventive Maintenance. Notifikasi tiket overdue.</p>
+      <span class="oc-cta">Lihat detail <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+    </a>
+    <a class="overview-card oc-3" href="#" onclick="showSection('fase3'); return false;">
+      <div class="oc-num">3</div>
+      <span class="oc-badge ocb-3">Bulan 8–13</span>
+      <h3>Fase 3 — Supply Chain</h3>
+      <p>Inventori spare part terintegrasi. Alur approval PR multi-level. Auto-alert stok kritis. Generate PO otomatis.</p>
+      <span class="oc-cta">Lihat detail <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+    </a>
+    <a class="overview-card oc-4" href="#" onclick="showSection('fase4'); return false;">
+      <div class="oc-num">4</div>
+      <span class="oc-badge ocb-4">Tahun 2–3</span>
+      <h3>Fase 4 — Enterprise AI</h3>
+      <p>Mobile App offline-first. AI Predictive Maintenance dengan akurasi ≥80%. Multi-pabrik. Auto-scaling.</p>
+      <span class="oc-cta">Lihat detail <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+    </a>
+  </div>
+
+  <!-- Target KPI -->
+  <div class="section-header">
+    <div class="section-eyebrow">Indikator Keberhasilan</div>
+    <h2>Target per Fase</h2>
+  </div>
+  <div class="grid-4 mb-32">
+    <div class="kpi-card" style="border-top: 3px solid var(--blue-400);">
+      <div class="kpi-num text-blue">100%</div>
+      <div class="kpi-label">Laporan via sistem tiket (Fase 1)</div>
+    </div>
+    <div class="kpi-card" style="border-top: 3px solid var(--teal-400);">
+      <div class="kpi-num text-teal">Auto</div>
+      <div class="kpi-label">PM terjadwal & laporan PDF (Fase 2)</div>
+    </div>
+    <div class="kpi-card" style="border-top: 3px solid var(--amber-400);">
+      <div class="kpi-num text-amber">≥50%</div>
+      <div class="kpi-label">Waktu approval PR lebih cepat (Fase 3)</div>
+    </div>
+    <div class="kpi-card" style="border-top: 3px solid var(--purple-400);">
+      <div class="kpi-num text-purple">≥80%</div>
+      <div class="kpi-label">Akurasi prediksi AI kerusakan (Fase 4)</div>
+    </div>
+  </div>
+
+  <!-- Roadmap Timeline -->
+  <div class="section-header">
+    <div class="section-eyebrow">Timeline Proyek</div>
+    <h2>Roadmap 3 Tahun</h2>
+  </div>
+  <div class="grid-2">
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot td-1"></div>
+        <div class="timeline-content">
+          <div class="timeline-period text-blue">Bulan 1–2</div>
+          <h3>Fase 1 — MVP & Fondasi Inti</h3>
+          <p>Sistem tiket live berbasis QR Code. Zero laporan WhatsApp.</p>
+          <div class="timeline-tags">
+            <span class="tag tag-blue">QR Code</span>
+            <span class="tag tag-blue">Dashboard tiket</span>
+            <span class="tag tag-blue">Role-based access</span>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot td-2"></div>
+        <div class="timeline-content">
+          <div class="timeline-period text-teal">Bulan 3–5</div>
+          <h3>Fase 2 — Automasi & Reporting</h3>
+          <p>PDF report otomatis, email notifikasi, scheduler PM.</p>
+          <div class="timeline-tags">
+            <span class="tag tag-teal">PDF Report</span>
+            <span class="tag tag-teal">Celery + Redis</span>
+            <span class="tag tag-teal">Scheduler PM</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot td-3"></div>
+        <div class="timeline-content">
+          <div class="timeline-period text-amber">Bulan 8–13</div>
+          <h3>Fase 3 — Supply Chain & Procurement</h3>
+          <p>Inventori spare part, workflow PR multi-level, cloud storage.</p>
+          <div class="timeline-tags">
+            <span class="tag tag-amber">Spare Part Inventory</span>
+            <span class="tag tag-amber">PR Approval</span>
+            <span class="tag tag-amber">Cloud Storage</span>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot td-4"></div>
+        <div class="timeline-content">
+          <div class="timeline-period text-purple">Tahun 2–3</div>
+          <h3>Fase 4 — Enterprise, Mobile & AI</h3>
+          <p>Mobile App offline, AI Predictive Maintenance, multi-tenant.</p>
+          <div class="timeline-tags">
+            <span class="tag tag-purple">Mobile App</span>
+            <span class="tag tag-purple">AI Prediktif</span>
+            <span class="tag tag-purple">Multi-tenant</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================== FASE 1 =============================== -->
+<section id="section-fase1" class="section">
+  <div class="phase-header ph-1" data-num="1">
+    <div class="phase-icon">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 17h7M17.5 14v7"/></svg>
+    </div>
+    <div class="phase-header-text">
+      <h2>Fase 1 — MVP & Fondasi Inti</h2>
+      <p>Menggantikan laporan WhatsApp dan Infinity Helpdesk dengan sistem tiket digital berbasis QR Code</p>
+      <span class="phase-badge">Bulan 1–2 · Prioritas Utama</span>
+    </div>
+  </div>
+
+  <div class="grid-2 mb-24">
+    <div class="card">
+      <div class="card-title mb-8">🎯 Tujuan Utama</div>
+      <ul class="feature-list">
+        <li><div class="feature-check check-blue"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>100% laporan kerusakan masuk via sistem tiket digital</div></li>
+        <li><div class="feature-check check-blue"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>Nol laporan kerusakan via WhatsApp</div></li>
+        <li><div class="feature-check check-blue"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>SPV bisa memonitor semua tiket secara real-time</div></li>
+        <li><div class="feature-check check-blue"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>Audit trail lengkap untuk setiap insiden mesin</div></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title mb-8">📦 Fitur yang Dibangun</div>
+      <ul class="feature-list">
+        <li><div class="feature-check check-blue"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>Generator QR Code unik per mesin (dipasang sebagai stiker)</div></li>
+        <li><div class="feature-check check-blue"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>Form laporan otomatis muncul saat QR di-scan (tanpa download app)</div></li>
+        <li><div class="feature-check check-blue"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>Dashboard tiket untuk SPV: assign, update status, pantau progres</div></li>
+        <li><div class="feature-check check-blue"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>Manajemen pengguna: Teknisi, SPV, Manajer, Direktur</div></li>
+        <li><div class="feature-check check-blue"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>Riwayat tiket per mesin untuk analisis ke depan</div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Workflow Tiket -->
+  <div class="section-header">
+    <div class="section-eyebrow">Workflow</div>
+    <h2>Alur Tiket Kerusakan</h2>
+    <p>Dari scan QR Code di mesin hingga tiket ditutup dan laporan tersimpan.</p>
+  </div>
+
+  <div class="workflow-container mb-24">
+    <div class="workflow-title">Workflow Tiket CMMS — Fase 1</div>
+    <div class="workflow-row">
+      <div class="workflow-step">
+        <div class="step-node" style="background:var(--blue-50);color:var(--blue-800);border-color:var(--blue-200);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 17h7M17.5 14v7"/></svg>
+        </div>
+        <div class="step-label">1. Scan QR Code</div>
+        <div class="step-sub">Teknisi scan stiker di mesin</div>
+      </div>
+      <div class="step-connector"><div class="step-connector-line"></div><svg viewBox="0 0 24 24" width="12" height="12"><polyline points="9 18 15 12 9 6"/></svg><div class="step-connector-line"></div></div>
+      <div class="workflow-step">
+        <div class="step-node" style="background:var(--blue-50);color:var(--blue-800);border-color:var(--blue-200);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <div class="step-label">2. Isi Form Tiket</div>
+        <div class="step-sub">Deskripsi, foto, prioritas</div>
+      </div>
+      <div class="step-connector"><div class="step-connector-line"></div><svg viewBox="0 0 24 24" width="12" height="12"><polyline points="9 18 15 12 9 6"/></svg><div class="step-connector-line"></div></div>
+      <div class="workflow-step">
+        <div class="step-node" style="background:var(--teal-50);color:var(--teal-600);border-color:var(--teal-100);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <div class="step-label">3. SPV Assign Teknisi</div>
+        <div class="step-sub">Pilih teknisi & deadline</div>
+      </div>
+      <div class="step-connector"><div class="step-connector-line"></div><svg viewBox="0 0 24 24" width="12" height="12"><polyline points="9 18 15 12 9 6"/></svg><div class="step-connector-line"></div></div>
+      <div class="workflow-step">
+        <div class="step-node" style="background:var(--amber-50);color:var(--amber-600);border-color:var(--amber-100);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <div class="step-label">4. Eksekusi Perbaikan</div>
+        <div class="step-sub">Update status real-time</div>
+      </div>
+      <div class="step-connector"><div class="step-connector-line"></div><svg viewBox="0 0 24 24" width="12" height="12"><polyline points="9 18 15 12 9 6"/></svg><div class="step-connector-line"></div></div>
+      <div class="workflow-step">
+        <div class="step-node" style="background:var(--amber-50);color:var(--amber-600);border-color:var(--amber-100);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div class="step-label">5. SPV Verifikasi</div>
+        <div class="step-sub">Cek hasil, foto bukti</div>
+      </div>
+      <div class="step-connector"><div class="step-connector-line"></div><svg viewBox="0 0 24 24" width="12" height="12"><polyline points="9 18 15 12 9 6"/></svg><div class="step-connector-line"></div></div>
+      <div class="workflow-step">
+        <div class="step-node" style="background:var(--green-50);color:var(--green-600);border-color:#C0DD97;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="step-label">Selesai</div>
+        <div class="step-sub">Tiket tutup, laporan tersimpan</div>
+      </div>
+    </div>
+    <div class="workflow-feedback mt-16">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+      Jika verifikasi gagal → tiket kembali ke status "In Progress" dengan catatan revisi (Eskalasi)
+    </div>
+  </div>
+
+  <!-- Status Tiket -->
+  <div class="card mb-24">
+    <div class="card-title mb-12">Status Tiket</div>
+    <div class="status-row">
+      <div class="status-badge sb-open"><div class="status-dot sd-open"></div>OPEN — Tiket baru dibuat</div>
+      <div class="status-badge sb-progress"><div class="status-dot sd-progress"></div>IN PROGRESS — Sedang dikerjakan</div>
+      <div class="status-badge sb-overdue"><div class="status-dot sd-overdue"></div>OVERDUE — Melewati deadline</div>
+      <div class="status-badge sb-done"><div class="status-dot sd-done"></div>CLOSED / DONE — Selesai & terverifikasi</div>
+    </div>
+  </div>
+
+  <!-- Tech Stack Fase 1 -->
+  <div class="section-header mt-24">
+    <div class="section-eyebrow">Teknologi</div>
+    <h2>Tech Stack Fase 1</h2>
+  </div>
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-title text-blue mb-4">Frontend</div>
+      <div class="tech-stack">
+        <span class="tech-pill"><span class="tech-pill-dot" style="background:var(--blue-400)"></span>HTML5</span>
+        <span class="tech-pill"><span class="tech-pill-dot" style="background:var(--blue-400)"></span>TailwindCSS</span>
+        <span class="tech-pill"><span class="tech-pill-dot" style="background:var(--blue-400)"></span>Vanilla JS</span>
+      </div>
+      <p class="card-desc mt-16">Mobile-responsive web app. Tidak perlu download aplikasi — langsung terbuka saat QR di-scan.</p>
+    </div>
+    <div class="card">
+      <div class="card-title text-blue mb-4">Backend & Database</div>
+      <div class="tech-stack">
+        <span class="tech-pill"><span class="tech-pill-dot" style="background:var(--teal-400)"></span>Python 3.x</span>
+        <span class="tech-pill"><span class="tech-pill-dot" style="background:var(--teal-400)"></span>Flask</span>
+        <span class="tech-pill"><span class="tech-pill-dot" style="background:var(--teal-400)"></span>PostgreSQL</span>
+      </div>
+      <p class="card-desc mt-16">Flask sebagai backbone logika bisnis. PostgreSQL langsung dipakai di produksi agar tidak perlu migrasi data.</p>
+    </div>
+    <div class="card">
+      <div class="card-title text-blue mb-4">Infrastruktur & Auth</div>
+      <div class="tech-stack">
+        <span class="tech-pill"><span class="tech-pill-dot" style="background:var(--amber-400)"></span>Render.com</span>
+        <span class="tech-pill"><span class="tech-pill-dot" style="background:var(--amber-400)"></span>Flask-Login</span>
+        <span class="tech-pill"><span class="tech-pill-dot" style="background:var(--amber-400)"></span>qrcode (Python)</span>
+      </div>
+      <p class="card-desc mt-16">Deploy ke Render.com (PaaS murah). Session cookie untuk autentikasi. Library qrcode generate gambar QR per mesin.</p>
+    </div>
+  </div>
+</section>
+
+<!-- =============================== FASE 2 =============================== -->
+<section id="section-fase2" class="section">
+  <div class="phase-header ph-2" data-num="2">
+    <div class="phase-icon">
+      <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    </div>
+    <div class="phase-header-text">
+      <h2>Fase 2 — Automasi & Reporting</h2>
+      <p>Laporan otomatis ke Manajer, scheduler Preventive Maintenance, dan notifikasi tiket overdue</p>
+      <span class="phase-badge">Bulan 3–5 · Lanjutan Fase 1</span>
+    </div>
+  </div>
+
+  <div class="grid-2 mb-24">
+    <div class="card">
+      <div class="card-title mb-8">🤖 Fitur Automasi Baru</div>
+      <ul class="feature-list">
+        <li><div class="feature-check check-teal"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>Laporan PDF otomatis (ringkasan tiket mingguan/bulanan) dikirim via email ke Manajer</div></li>
+        <li><div class="feature-check check-teal"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>Export data ke format Excel untuk analisis lanjutan</div></li>
+        <li><div class="feature-check check-teal"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>Scheduler otomatis: buat tiket PM setiap tanggal 1 berdasarkan daftar mesin</div></li>
+        <li><div class="feature-check check-teal"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>Notifikasi email jika tiket melewati batas waktu (overdue)</div></li>
+        <li><div class="feature-check check-teal"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>Dashboard laporan dengan grafik tren kerusakan per mesin / area</div></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title mb-8">⚡ Mengapa Celery + Redis?</div>
+      <p class="card-desc" style="margin-bottom:12px;">Tanpa background worker, saat server diminta membuat laporan PDF tebal atau mengirim email ke banyak penerima sekaligus, server akan <strong>"hang"</strong> dan pengguna lain tidak bisa mengakses sistem.</p>
+      <div style="background:var(--teal-50);border:1px solid var(--teal-100);border-radius:var(--radius-md);padding:14px 16px;">
+        <div style="font-size:13px;font-weight:700;color:var(--teal-800);margin-bottom:6px;">Solusinya:</div>
+        <p style="font-size:13px;color:var(--teal-600);line-height:1.5;">Celery memindahkan pekerjaan berat ke antrian yang diproses secara <strong>asinkron</strong> di background — server tetap responsif untuk pengguna lain.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Automation Flow -->
+  <div class="section-header">
+    <div class="section-eyebrow">Sistem Notifikasi</div>
+    <h2>Alur Automasi Fase 2</h2>
+  </div>
+
+  <div class="workflow-container mb-24">
+    <div class="workflow-title">Sistem Automasi — Fase 2</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--teal-600);margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em;">📊 Laporan Otomatis</div>
+        <div class="workflow-row" style="justify-content:flex-start;gap:4px;">
+          <div style="background:var(--teal-50);border:1px solid var(--teal-100);border-radius:8px;padding:10px 12px;font-size:12px;font-weight:600;color:var(--teal-800);text-align:center;min-width:88px;">Jadwal<br>berjalan otomatis<br><span style="font-weight:400;color:var(--teal-600);font-size:10px;">setiap minggu</span></div>
+          <div class="step-connector-line" style="width:12px;background:var(--teal-200);height:2px;margin:auto 0;"></div>
+          <div style="background:var(--teal-50);border:1px solid var(--teal-100);border-radius:8px;padding:10px 12px;font-size:12px;font-weight:600;color:var(--teal-800);text-align:center;min-width:88px;">Buat laporan<br>PDF ringkasan<br><span style="font-weight:400;color:var(--teal-600);font-size:10px;">tiket & mesin</span></div>
+          <div class="step-connector-line" style="width:12px;background:var(--teal-200);height:2px;margin:auto 0;"></div>
+          <div style="background:var(--teal-50);border:1px solid var(--teal-100);border-radius:8px;padding:10px 12px;font-size:12px;font-weight:600;color:var(--teal-800);text-align:center;min-width:88px;">Kirim via<br>email otomatis<br><span style="font-weight:400;color:var(--teal-600);font-size:10px;">ke Manajer</span></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--teal-600);margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em;">🔔 Notifikasi Overdue</div>
+        <div class="workflow-row" style="justify-content:flex-start;gap:4px;">
+          <div style="background:var(--teal-50);border:1px solid var(--teal-100);border-radius:8px;padding:10px 12px;font-size:12px;font-weight:600;color:var(--teal-800);text-align:center;min-width:88px;">Sistem pantau<br>semua tiket<br><span style="font-weight:400;color:var(--teal-600);font-size:10px;">otomatis tiap jam</span></div>
+          <div class="step-connector-line" style="width:12px;background:var(--teal-200);height:2px;margin:auto 0;"></div>
+          <div style="background:#FFF9EB;border:1px solid var(--amber-100);border-radius:8px;padding:10px 12px;font-size:12px;font-weight:600;color:var(--amber-800);text-align:center;min-width:88px;">Tiket melewati<br>deadline<br><span style="font-weight:400;color:var(--amber-600);font-size:10px;">status: OVERDUE</span></div>
+          <div class="step-connector-line" style="width:12px;background:var(--teal-200);height:2px;margin:auto 0;"></div>
+          <div style="background:var(--teal-50);border:1px solid var(--teal-100);border-radius:8px;padding:10px 12px;font-size:12px;font-weight:600;color:var(--teal-800);text-align:center;min-width:88px;">Kirim peringatan<br>via email<br><span style="font-weight:400;color:var(--teal-600);font-size:10px;">ke SPV & Manajer</span></div>
+        </div>
+      </div>
+    </div>
+    <hr class="divider">
+    <div style="font-size:12px;font-weight:700;color:var(--teal-600);margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em;">🔧 Scheduler Preventive Maintenance</div>
+    <div class="workflow-row" style="justify-content:flex-start;gap:4px;">
+      <div style="background:var(--teal-50);border:1px solid var(--teal-100);border-radius:8px;padding:10px 14px;font-size:12px;font-weight:600;color:var(--teal-800);">Setiap tanggal 1<br><span style="font-weight:400;color:var(--teal-600);font-size:11px;">berjalan otomatis</span></div>
+      <div class="step-connector-line" style="width:12px;background:var(--teal-200);height:2px;margin:auto 0;"></div>
+      <div style="background:var(--teal-50);border:1px solid var(--teal-100);border-radius:8px;padding:10px 14px;font-size:12px;font-weight:600;color:var(--teal-800);">Buat tiket PM<br><span style="font-weight:400;color:var(--teal-600);font-size:11px;">otomatis per mesin</span></div>
+      <div class="step-connector-line" style="width:12px;background:var(--teal-200);height:2px;margin:auto 0;"></div>
+      <div style="background:var(--teal-50);border:1px solid var(--teal-100);border-radius:8px;padding:10px 14px;font-size:12px;font-weight:600;color:var(--teal-800);">Assign ke teknisi<br><span style="font-weight:400;color:var(--teal-600);font-size:11px;">sesuai jadwal</span></div>
+      <div class="step-connector-line" style="width:12px;background:var(--teal-200);height:2px;margin:auto 0;"></div>
+      <div style="background:var(--teal-50);border:1px solid var(--teal-100);border-radius:8px;padding:10px 14px;font-size:12px;font-weight:600;color:var(--teal-800);">Notifikasi dikirim<br><span style="font-weight:400;color:var(--teal-600);font-size:11px;">ke teknisi via email</span></div>
+    </div>
+  </div>
+
+  <!-- Tech Stack Fase 2 -->
+  <div class="section-header mt-24">
+    <div class="section-eyebrow">Teknologi Tambahan</div>
+    <h2>Penambahan di Fase 2</h2>
+  </div>
+  <div class="grid-4">
+    <div class="card">
+      <div class="card-title text-teal mb-4">Background Worker</div>
+      <div class="tech-stack"><span class="tech-pill"><span class="tech-pill-dot" style="background:var(--teal-400)"></span>Celery</span><span class="tech-pill"><span class="tech-pill-dot" style="background:var(--teal-400)"></span>Redis</span></div>
+      <p class="card-desc mt-8">Proses berat berjalan di background</p>
+    </div>
+    <div class="card">
+      <div class="card-title text-teal mb-4">Reporting Engine</div>
+      <div class="tech-stack"><span class="tech-pill"><span class="tech-pill-dot" style="background:var(--teal-400)"></span>WeasyPrint</span><span class="tech-pill"><span class="tech-pill-dot" style="background:var(--teal-400)"></span>Pandas</span><span class="tech-pill"><span class="tech-pill-dot" style="background:var(--teal-400)"></span>OpenPyXL</span></div>
+      <p class="card-desc mt-8">HTML ke PDF, export Excel</p>
+    </div>
+    <div class="card">
+      <div class="card-title text-teal mb-4">Email Notification</div>
+      <div class="tech-stack"><span class="tech-pill"><span class="tech-pill-dot" style="background:var(--teal-400)"></span>SendGrid</span><span class="tech-pill"><span class="tech-pill-dot" style="background:var(--teal-400)"></span>Mailgun</span></div>
+      <p class="card-desc mt-8">Kirim laporan & alert otomatis</p>
+    </div>
+    <div class="card">
+      <div class="card-title text-teal mb-4">Scheduler</div>
+      <div class="tech-stack"><span class="tech-pill"><span class="tech-pill-dot" style="background:var(--teal-400)"></span>Celery Beat</span><span class="tech-pill"><span class="tech-pill-dot" style="background:var(--teal-400)"></span>APScheduler</span></div>
+      <p class="card-desc mt-8">Buat tiket PM otomatis</p>
+    </div>
+  </div>
+</section>
+
+<!-- =============================== FASE 3 =============================== -->
+<section id="section-fase3" class="section">
+  <div class="phase-header ph-3" data-num="3">
+    <div class="phase-icon">
+      <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+    </div>
+    <div class="phase-header-text">
+      <h2>Fase 3 — Supply Chain & Procurement</h2>
+      <p>Manajemen stok spare part dengan alert otomatis dan alur approval Purchase Request multi-level</p>
+      <span class="phase-badge">Bulan 8–13 · Integrasi Pengadaan</span>
+    </div>
+  </div>
+
+  <div class="grid-2 mb-24">
+    <div class="card">
+      <div class="card-title mb-8">📦 Fitur Supply Chain</div>
+      <ul class="feature-list">
+        <li><div class="feature-check check-amber"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>Inventori spare part terintegrasi — stok, lokasi gudang, minimum buffer</div></li>
+        <li><div class="feature-check check-amber"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>Auto-alert: PostgreSQL Trigger otomatis jika stok turun di bawah batas minimum</div></li>
+        <li><div class="feature-check check-amber"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>Modul PR dengan alur approval multi-level: Teknisi → SPV → Manajer → Direktur</div></li>
+        <li><div class="feature-check check-amber"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>Generate dokumen PO (Purchase Order) PDF otomatis setelah disetujui</div></li>
+        <li><div class="feature-check check-amber"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>Upload foto kerusakan & bukti tersimpan di cloud (Cloudflare R2 / AWS S3)</div></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title mb-8">💡 Logika State Machine</div>
+      <p class="card-desc mb-12">Setiap PR <strong>hanya bisa berpindah ke status berikutnya</strong> setelah disetujui pejabat berwenang.</p>
+      <div style="background:var(--amber-50);border:1px solid var(--amber-100);border-radius:var(--radius-md);padding:12px 14px;margin-bottom:10px;">
+        <div style="font-size:12px;font-weight:600;color:var(--amber-800);">Sistem mencatat:</div>
+        <ul style="font-size:12px;color:var(--amber-600);margin-top:6px;padding-left:16px;">
+          <li>Siapa yang menyetujui</li>
+          <li>Kapan disetujui (timestamp)</li>
+          <li>Catatan jika ada penolakan</li>
+        </ul>
+      </div>
+      <p class="card-desc"><strong>Efek:</strong> Direktur hanya melihat PR yang sudah disetujui SPV dan Manajer — tidak kelebihan beban persetujuan.</p>
+    </div>
+  </div>
+
+  <!-- Approval Flow -->
+  <div class="section-header">
+    <div class="section-eyebrow">Workflow Procurement</div>
+    <h2>Alur Approval Purchase Request</h2>
+  </div>
+
+  <div class="workflow-container mb-24">
+    <div class="workflow-title">Workflow Approval PR — dari Draft hingga Pengadaan</div>
+    <div class="approval-flow">
+      <div class="appr-step">
+        <div class="appr-node" style="background:var(--gray-100);color:var(--gray-800);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="appr-label">1. DRAFT<br>Teknisi buat PR</div>
+      </div>
+      <div class="appr-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+      <div class="appr-step">
+        <div class="appr-node" style="background:var(--blue-50);color:var(--blue-800);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="appr-label">2. REVIEW SPV<br>Cek kebutuhan</div>
+      </div>
+      <div class="appr-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+      <div class="appr-step">
+        <div class="appr-node" style="background:var(--teal-50);color:var(--teal-600);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <div class="appr-label">3. REVIEW MGR<br>Approval budget</div>
+      </div>
+      <div class="appr-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+      <div class="appr-step">
+        <div class="appr-node" style="background:var(--amber-50);color:var(--amber-600);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <div class="appr-label">4. REVIEW DIR<br>Final approval</div>
+      </div>
+      <div class="appr-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+      <div class="appr-step">
+        <div class="appr-node" style="background:var(--green-50);color:var(--green-600);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="16 13 12 17 8 13"/><line x1="12" y1="12" x2="12" y2="17"/></svg>
+        </div>
+        <div class="appr-label">5. DISETUJUI<br>Generate PO (PDF)</div>
+      </div>
+      <div class="appr-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+      <div class="appr-step">
+        <div class="appr-node" style="background:#EAF3DE;color:var(--green-600);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        </div>
+        <div class="appr-label">6. PENGADAAN<br>Beli spare part</div>
+      </div>
+    </div>
+    <div class="workflow-feedback mt-16">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+      Jika DITOLAK → PR kembali ke Draft dengan catatan revisi dari pejabat yang menolak
+    </div>
+  </div>
+
+  <!-- Auto Alert Feature -->
+  <div class="card mb-24" style="background:var(--amber-50);border-color:var(--amber-100);">
+    <div class="card-title text-amber mb-8">⚡ Auto-Alert Stok Kritis (PostgreSQL Trigger)</div>
+    <p class="card-desc mb-12">Saat stok V-Belt, Oil Filter, atau spare part kritis lain turun di bawah batas minimum — sistem <strong>secara otomatis</strong> membuat draft PR dan mengirim notifikasi ke SPV untuk tindak lanjut.</p>
+    <div class="tech-stack">
+      <span class="tech-pill"><span class="tech-pill-dot" style="background:var(--amber-400)"></span>PostgreSQL Trigger</span>
+      <span class="tech-pill"><span class="tech-pill-dot" style="background:var(--amber-400)"></span>Cloudflare R2 / AWS S3</span>
+      <span class="tech-pill"><span class="tech-pill-dot" style="background:var(--amber-400)"></span>State Machine (Flask)</span>
+      <span class="tech-pill"><span class="tech-pill-dot" style="background:var(--amber-400)"></span>Presigned URL Upload</span>
+    </div>
+  </div>
+</section>
+
+<!-- =============================== FASE 4 =============================== -->
+<section id="section-fase4" class="section">
+  <div class="phase-header ph-4" data-num="4">
+    <div class="phase-icon">
+      <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+    </div>
+    <div class="phase-header-text">
+      <h2>Fase 4 — Enterprise, Mobile & AI</h2>
+      <p>Multi-pabrik, Predictive Maintenance berbasis AI, dan akses offline melalui Mobile App native</p>
+      <span class="phase-badge">Tahun 2–3 · Transformasi Enterprise</span>
+    </div>
+  </div>
+
+  <!-- AI Highlight -->
+  <div class="ai-card mb-24">
+    <div style="font-size:13px;font-weight:700;color:var(--purple-800);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;">Contoh Notifikasi AI Predictive Maintenance</div>
+    <div class="ai-notification">
+      <strong>🔮 Prediksi Kerusakan — Mesin Pompa #3</strong><br><br>
+      Mesin Pompa #3 biasanya mengalami kerusakan setiap <strong>40 hari</strong>. Namun berdasarkan data sensor suhu 2 minggu terakhir yang konsisten di atas normal, model memprediksi kemungkinan kerusakan dalam <strong>15 hari ke depan</strong>.<br><br>
+      <strong>Rekomendasi:</strong> Lakukan inspeksi dalam 7 hari. — Notifikasi dikirim otomatis ke SPV dan Manajer.
+    </div>
+    <div style="margin-top:12px;font-size:12px;color:var(--purple-600);">Model: Scikit-learn + Prophet (Python) · Akurasi target ≥80% · Data: histori jutaan titik kerusakan</div>
+  </div>
+
+  <div class="grid-2 mb-24">
+    <div class="card">
+      <div class="card-title mb-8">📱 Mobile App Offline-First</div>
+      <ul class="feature-list">
+        <li><div class="feature-check check-purple"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>Flutter / React Native — tersedia di Google Play Store & App Store</div></li>
+        <li><div class="feature-check check-purple"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>Teknisi bisa update tiket tanpa sinyal WiFi</div></li>
+        <li><div class="feature-check check-purple"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>Data sinkron otomatis saat koneksi tersedia kembali</div></li>
+        <li><div class="feature-check check-purple"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>JWT Token untuk autentikasi aman di mobile</div></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title mb-8">🏭 Multi-Tenant & Skalabilitas</div>
+      <ul class="feature-list">
+        <li><div class="feature-check check-purple"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>Satu sistem untuk banyak pabrik/cabang dengan isolasi data per tenant</div></li>
+        <li><div class="feature-check check-purple"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>Docker + Kubernetes di AWS / GCP — auto-scaling saat pengguna meningkat</div></li>
+        <li><div class="feature-check check-purple"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>PostgreSQL Master-Slave replication untuk keandalan tinggi</div></li>
+        <li><div class="feature-check check-purple"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div>WhatsApp Business API sebagai channel notifikasi tambahan</div></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-header mt-24">
+    <div class="section-eyebrow">Teknologi</div>
+    <h2>Tech Stack Fase 4</h2>
+  </div>
+  <div class="grid-4">
+    <div class="card">
+      <div class="card-title text-purple mb-4">Mobile</div>
+      <div class="tech-stack"><span class="tech-pill"><span class="tech-pill-dot" style="background:var(--purple-400)"></span>Flutter</span><span class="tech-pill"><span class="tech-pill-dot" style="background:var(--purple-400)"></span>React Native</span></div>
+      <p class="card-desc mt-8">Offline-first, sinkron otomatis</p>
+    </div>
+    <div class="card">
+      <div class="card-title text-purple mb-4">Backend</div>
+      <div class="tech-stack"><span class="tech-pill"><span class="tech-pill-dot" style="background:var(--purple-400)"></span>FastAPI</span><span class="tech-pill"><span class="tech-pill-dot" style="background:var(--purple-400)"></span>Microservices</span></div>
+      <p class="card-desc mt-8">Lebih cepat dari Flask, API-first</p>
+    </div>
+    <div class="card">
+      <div class="card-title text-purple mb-4">AI / ML</div>
+      <div class="tech-stack"><span class="tech-pill"><span class="tech-pill-dot" style="background:var(--purple-400)"></span>Scikit-learn</span><span class="tech-pill"><span class="tech-pill-dot" style="background:var(--purple-400)"></span>Prophet</span><span class="tech-pill"><span class="tech-pill-dot" style="background:var(--purple-400)"></span>Pandas</span></div>
+      <p class="card-desc mt-8">Prediksi kerusakan dari histori data</p>
+    </div>
+    <div class="card">
+      <div class="card-title text-purple mb-4">Infrastruktur</div>
+      <div class="tech-stack"><span class="tech-pill"><span class="tech-pill-dot" style="background:var(--purple-400)"></span>Docker</span><span class="tech-pill"><span class="tech-pill-dot" style="background:var(--purple-400)"></span>Kubernetes</span><span class="tech-pill"><span class="tech-pill-dot" style="background:var(--purple-400)"></span>AWS / GCP</span></div>
+      <p class="card-desc mt-8">Auto-scaling, multi-tenant</p>
+    </div>
+  </div>
+
+  <!-- Mengapa Python -->
+  <div class="card mt-24" style="background:var(--purple-50);border-color:var(--purple-100);">
+    <div class="card-title text-purple mb-8">🐍 Mengapa Python Sejak Fase 1?</div>
+    <p class="card-desc">Pilihan Python bukan hanya untuk kemudahan pengembangan awal. Saat proyek mencapai Fase 4, tim Data Scientist <strong>tidak perlu mempelajari bahasa baru</strong> untuk membangun model AI. Library Scikit-learn, Prophet, dan Pandas dapat langsung digunakan dalam ekosistem yang sama — mempersingkat waktu pengembangan AI secara signifikan.</p>
+  </div>
+</section>
+
+<!-- =============================== ARSITEKTUR =============================== -->
+<section id="section-arsitektur" class="section">
+  <div class="section-header">
+    <div class="section-eyebrow">Desain Sistem</div>
+    <h2>Arsitektur Sistem — Evolusi 4 Fase</h2>
+    <p>Sistem dibangun dengan arsitektur berlapis (layered architecture) yang dapat berkembang secara bertahap. Setiap lapisan dapat diganti teknologinya secara independen.</p>
+  </div>
+
+  <div class="arch-container mb-32">
+    <div class="arch-header">
+      <div></div>
+      <div class="arch-header-phases">
+        <div class="arch-phase-label apl-1">Fase 1 · MVP</div>
+        <div class="arch-phase-label apl-2">Fase 2 · Automasi</div>
+        <div class="arch-phase-label apl-3">Fase 3 · Supply Chain</div>
+        <div class="arch-phase-label apl-4">Fase 4 · Enterprise AI</div>
+      </div>
+    </div>
+    <div class="arch-row">
+      <div class="arch-layer-label">Layer 1<br>Frontend</div>
+      <div class="arch-phases">
+        <div class="arch-cell ph1">HTML5 + TailwindCSS · Vanilla JS</div>
+        <div class="arch-cell ph2">HTML5 + TailwindCSS</div>
+        <div class="arch-cell ph3">HTML5 + TailwindCSS</div>
+        <div class="arch-cell ph4">Flutter / React Native · Offline-First</div>
+      </div>
+    </div>
+    <div class="arch-row">
+      <div class="arch-layer-label">Layer 2<br>API / Backend</div>
+      <div class="arch-phases">
+        <div class="arch-cell ph1">Flask + SQLite · Flask-Login</div>
+        <div class="arch-cell ph2">Flask + Celery + Redis</div>
+        <div class="arch-cell ph3">Flask + State Machine</div>
+        <div class="arch-cell ph4">FastAPI + Microservices · Docker + Kubernetes</div>
+      </div>
+    </div>
+    <div class="arch-row">
+      <div class="arch-layer-label">Layer 3<br>Database</div>
+      <div class="arch-phases">
+        <div class="arch-cell ph1">SQLite → PostgreSQL</div>
+        <div class="arch-cell ph2">PostgreSQL (Indexing)</div>
+        <div class="arch-cell ph3">PostgreSQL + Triggers · Cloudflare R2 / S3</div>
+        <div class="arch-cell ph4">PostgreSQL Master-Slave · AWS S3 / GCP</div>
+      </div>
+    </div>
+    <div class="arch-row">
+      <div class="arch-layer-label">Layer 4<br>Notifikasi</div>
+      <div class="arch-phases">
+        <div class="arch-cell ph1">—</div>
+        <div class="arch-cell ph2">SendGrid / Mailgun</div>
+        <div class="arch-cell ph3">SendGrid / Mailgun</div>
+        <div class="arch-cell ph4">Email + WhatsApp Business API</div>
+      </div>
+    </div>
+    <div class="arch-row">
+      <div class="arch-layer-label">Layer 5<br>Auth</div>
+      <div class="arch-phases">
+        <div class="arch-cell ph1">Flask-Login · Session Cookie</div>
+        <div class="arch-cell ph2">Flask-Login</div>
+        <div class="arch-cell ph3">Session + JWT (Transisi)</div>
+        <div class="arch-cell ph4">JWT Token</div>
+      </div>
+    </div>
+    <div class="arch-row">
+      <div class="arch-layer-label">Layer 6<br>File Storage</div>
+      <div class="arch-phases">
+        <div class="arch-cell ph1">Local Folder Server</div>
+        <div class="arch-cell ph2">Local Folder Server</div>
+        <div class="arch-cell ph3">Cloudflare R2 / AWS S3</div>
+        <div class="arch-cell ph4">Cloudflare R2 / AWS S3</div>
+      </div>
+    </div>
+    <div class="arch-row">
+      <div class="arch-layer-label">Layer 7<br>AI / ML</div>
+      <div class="arch-phases">
+        <div class="arch-cell ph1" style="color:var(--text-muted);">—</div>
+        <div class="arch-cell ph2" style="color:var(--text-muted);">—</div>
+        <div class="arch-cell ph3" style="color:var(--text-muted);">—</div>
+        <div class="arch-cell ph4">Scikit-learn · Prophet · Pandas · Predictive Model</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Manajemen Risiko -->
+  <div class="section-header">
+    <div class="section-eyebrow">Manajemen Risiko</div>
+    <h2>Risiko & Mitigasi</h2>
+  </div>
+  <div class="card">
+    <table class="risk-table">
+      <thead>
+        <tr>
+          <th>Risiko</th>
+          <th>Level</th>
+          <th>Strategi Mitigasi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Adopsi Pengguna</strong><br>Teknisi tidak terbiasa sistem digital</td>
+          <td><span class="risk-level rl-high">🔴 Tinggi</span></td>
+          <td>Pelatihan singkat, antarmuka mobile-friendly, QR Code menghilangkan kebutuhan login manual</td>
+        </tr>
+        <tr>
+          <td><strong>Ketersediaan Server</strong><br>Render.com (gratis) dapat downtime</td>
+          <td><span class="risk-level rl-med">🟡 Sedang</span></td>
+          <td>Fase 1 masih bisa fallback ke WA jika sistem down; upgrade ke plan berbayar sebelum Fase 2</td>
+        </tr>
+        <tr>
+          <td><strong>Kehilangan Data</strong><br>SQLite tidak cocok untuk produksi</td>
+          <td><span class="risk-level rl-high">🔴 Tinggi</span></td>
+          <td>Langsung pakai PostgreSQL dengan backup otomatis harian sejak hari pertama deploy</td>
+        </tr>
+        <tr>
+          <td><strong>Overscoping</strong><br>Terlalu banyak fitur sekaligus</td>
+          <td><span class="risk-level rl-med">🟡 Sedang</span></td>
+          <td>Setiap fase harus deliver MVP-nya sebelum memulai fase berikutnya</td>
+        </tr>
+        <tr>
+          <td><strong>Ketergantungan Vendor</strong><br>Bergantung pada satu cloud provider</td>
+          <td><span class="risk-level rl-low">🟢 Rendah</span></td>
+          <td>Desain storage layer agar dapat berpindah provider (R2 ↔ S3) tanpa perubahan kode besar</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Langkah Selanjutnya -->
+  <div class="card mt-24" style="border-left:4px solid var(--blue-400);">
+    <div class="card-title mb-12">🚀 Langkah Selanjutnya</div>
+    <ol style="font-size:14px;color:var(--text-secondary);padding-left:20px;display:flex;flex-direction:column;gap:8px;">
+      <li>Review dan persetujuan dokumen oleh manajemen</li>
+      <li>Pembentukan tim inti pengembangan (1 Backend Dev, 1 Frontend Dev, 1 Project Owner)</li>
+      <li>Setup environment development dan repository kode</li>
+      <li>Kick-off Sprint 1 — Fase 1 MVP</li>
+    </ol>
+  </div>
+</section>
+
+</div>
+
+<script>
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  const s = document.getElementById('section-' + name);
+  if (s) s.classList.add('active');
+  const t = document.querySelector(`.nav-tab[data-section="${name}"]`);
+  if (t) t.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
